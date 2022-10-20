@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
 
+
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, email: str, password: str) -> 'CustomUser':
@@ -34,9 +35,6 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    # def get_info(self):
-    #     print('Custom User Manager!!!')
-
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
@@ -56,7 +54,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default=False,
     )
 
-    data_joined = models.DateTimeField(
+    date_joined = models.DateTimeField(
         'Время создания',
         default=timezone.now,
     )
