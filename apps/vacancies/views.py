@@ -13,7 +13,10 @@ from rest_framework.permissions import AllowAny
 #     ValidationMixin,
 # )
 
-from vacancies.serializers import VacancySerializer
+from vacancies.serializers import (
+    VacanciesSerializer,
+    VacancySerializer,
+)
 
 from vacancies.models import VacancyModel
 
@@ -27,6 +30,32 @@ class VacanciesViewSet(
 
     queryset: QuerySet[VacancyModel] = \
         VacancyModel.objects.all()
+
+    @action(
+        methods=['get'],
+        detail=False,
+        url_path='list',
+        permission_classes=(
+            AllowAny,
+        )
+    )
+    def list(self, request: Request) -> Response:
+
+        serializer: VacanciesSerializer = \
+            VacanciesSerializer(
+                self.queryset,
+                many=True
+            )
+        return self.get_json_response(
+            serializer.data
+        )
+
+
+class VacancyViewSet(ViewSet):
+    """VacancyViewSet. """
+
+    queryset: QuerySet[VacancyModel] = \
+        VacancyModel.objects.filter(id=id)
 
     @action(
         methods=['get'],
