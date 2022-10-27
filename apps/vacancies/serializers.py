@@ -18,6 +18,7 @@ class VacanciesSerializer(ModelSerializer):
     class Meta:
         model = VacancyModel
         fields = (
+            'id',
             'vacancy_name',
             'company_name',
             'salary',
@@ -37,6 +38,7 @@ class VacancySerializer(ModelSerializer):
     class Meta:
         model = VacancyModel
         fields = (
+            'id',
             'vacancy_name',
             'company_name',
             'salary',

@@ -22,9 +22,12 @@ class VacancyModel(models.Model):
         max_length=700
     )
 
-    def __str__(self):
-        return self.vacancy_name
+    # def __str__(self):
+    #     return self.vacancy_name
 
     class Meta:
+        ordering = (
+            'number',
+        )
         verbose_name = 'Vacancy'
         verbose_name_plural = 'Vacancies'

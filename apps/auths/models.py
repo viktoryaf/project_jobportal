@@ -1,13 +1,17 @@
 from django.db import models
+from django.conf import settings
 
 from django.utils import timezone
-from django.db import models
+from datetime import datetime
+from datetime import timedelta
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
+
+import jwt
 
 
 class CustomUserManager(BaseUserManager):
@@ -41,7 +45,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         'Почта/Логин',
         unique=True,
     )
-    number = models.CharField(
+    phone_number = models.CharField(
         'Номер телефона',
         max_length=11,
     )
@@ -61,6 +65,28 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
+
+    def __str__(self):
+        return self.username
+
+    @property
+    def token(self):
+        return self._generate_jwt_token()
+
+    def _generate_jwt_token(self):
+        """
+        Создает веб-токен JSON, в котором хранится идентификатор
+        этого пользователя и срок его действия
+        составляет 60 дней в будущем.
+        """
+        dt = datetime.now() + timedelta(days=60)
+
+        token = jwt.encode({
+            'id': self.pk,
+            'exp': int(dt.strftime('%s'))
+        }, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode('utf-8')
 
     class Meta:
         ordering = (
