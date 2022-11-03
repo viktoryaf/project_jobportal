@@ -1,19 +1,27 @@
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.views import (
+    APIView, 
+    UpdateAPIView,
+)
 
 from .models import CustomUser
-from .serializers import (
-    LoginSerializer
+from auths.serializers import (
+    LoginSerializer,
+    RegistrationSerializer,
+    UpdateUserSerializer,
+    ChangePasswordSerializer,
 )
-from .serializers import RegistrationSerializer
+
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import (
     redirect,
 )
 from django.contrib.auth import logout
+
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegistrationAPIView(APIView):
@@ -68,3 +76,17 @@ class LogoutAPIView(APIView):
     def get(self, request: WSGIRequest, *args, **kwargs):
         logout(request)
         return redirect(to="/auth/login")
+
+
+class UpdatePersonalData(UpdateAPIView):
+
+    queryset = CustomUser.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateUserSerializer
+
+
+class ChangePasswordView(UpdateAPIView):
+
+    queryset = CustomUser.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer

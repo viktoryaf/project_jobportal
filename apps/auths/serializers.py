@@ -3,6 +3,8 @@ from .models import CustomUser
 
 from .backends import authenticate
 
+from django.contrib.auth.password_validation import validate_password
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
 
@@ -76,3 +78,66 @@ class LoginSerializer(serializers.Serializer):
         return {
             'token': user.token,
         }
+
+
+class UpdateUserSerializer(serializers.Serializer):
+    class Meta:
+        model = CustomUser
+        fields = (
+            'id',
+            'email',
+            'phone_number',
+        )
+
+    def validate_email(self, value):
+        user = self.context['request'].user
+        if CustomUser.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError({"email": "This email is already in use."})
+        return value
+
+    def validate_phone_number(self, value):
+        user = self.context['request'].user
+        if CustomUser.objects.exclude(pk=user.pk).filter(username=value).exists():
+            raise serializers.ValidationError({"phone_number": "This phone_number is already in use."})
+        return value
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data['email']
+        instance.phone_number = validated_data['phone_number']
+
+        instance.save()
+
+        return instance
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    repeat_password = serializers.CharField(write_only=True, required=True)
+    old_password = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'old_password', 
+            'password', 
+            'repeat_password',
+        )
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['repeat_password']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "Old password is not correct"})
+        return value
+
+    def update(self, instance, validated_data):
+
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance

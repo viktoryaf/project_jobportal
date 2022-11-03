@@ -22,6 +22,7 @@ from rest_framework_simplejwt.views import (
 
 from django.contrib import admin
 from django.urls import (
+    base,
     path,
     include,
 )
@@ -31,7 +32,7 @@ from django.conf.urls.static import static
 
 from apps.vacancies.views import (
     VacanciesViewSet,
-    VacancyViewSet,
+    # VacancyViewSet,
 )
 
 # from apps.vacancies import views
@@ -46,7 +47,7 @@ from apps.vacancies.views import (
 
 
 urlpatterns = [
-    path(settings.ADMIN_SITE_URL, admin.site.urls),
+    # path(settings.ADMIN_SITE_URL, admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
