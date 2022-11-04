@@ -1,5 +1,11 @@
-from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework import (
+    status,
+    generics,
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 from rest_framework.views import (
     APIView, 
@@ -14,14 +20,11 @@ from auths.serializers import (
     ChangePasswordSerializer,
 )
 
-
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import (
     redirect,
 )
 from django.contrib.auth import logout
-
-from rest_framework.permissions import IsAuthenticated
 
 
 class RegistrationAPIView(APIView):
@@ -85,7 +88,7 @@ class UpdatePersonalData(UpdateAPIView):
     serializer_class = UpdateUserSerializer
 
 
-class ChangePasswordView(UpdateAPIView):
+class ChangePasswordView(generics.UpdateAPIView):
 
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)

@@ -49,11 +49,14 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
 ]
 
 PROJECT_APPS = [
     'auths.apps.AuthsConfig',
     'vacancies.apps.VacanciesConfig',
+    'search.apps.SearchConfig',
+    'chats.apps.ChatConfig',
 ]
 
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
