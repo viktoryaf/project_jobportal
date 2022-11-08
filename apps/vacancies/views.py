@@ -8,10 +8,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
-# from abstracts.mixins import (
-#     ResponseMixin,
-#     ValidationMixin,
-# )
+from abstracts.mixins import (
+    ResponseMixin,
+    ValidationMixin,
+)
 
 from vacancies.serializers import (
     VacanciesSerializer,
@@ -22,8 +22,8 @@ from vacancies.models import VacancyModel
 
 
 class VacanciesViewSet(
-    # ValidationMixin,
-    # ResponseMixin,
+    ValidationMixin,
+    ResponseMixin,
     ViewSet
 ):
     """VacanciesViewSet."""
@@ -50,12 +50,30 @@ class VacanciesViewSet(
             serializer.data
         )
 
+    def destroy(self, request: Request, pk: str) -> Response:
+
+        obj: VacancyModel = self.get_obj_if_exists_raise_if_doesnt(
+            self.queryset,
+            pk
+        )
+        obj.delete()
+
+        return self.get_json_response(
+            {
+                'message': 'Объект был удален',
+                'payload': {
+                    'obj_id': f'{obj.id}',
+                    'obj_deleted': f'{obj.datetime_deleted}',
+                }
+            }
+        )
+
 
 class VacancyViewSet(ViewSet):
     """VacancyViewSet. """
 
     queryset: QuerySet[VacancyModel] = \
-        VacancyModel.objects.filter(id=id)
+        VacancyModel.objects.filter(pk=id)
 
     @action(
         methods=['get'],
