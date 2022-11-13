@@ -4,6 +4,11 @@ from vacancies.models import (
     VacancyModel,
 )
 
+
+class VacancyAdmin(admin.ModelAdmin):
+    model = VacancyModel
+
+
 admin.site.register(
-    VacancyModel
+    VacancyModel, VacancyAdmin
 )

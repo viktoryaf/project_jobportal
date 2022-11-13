@@ -8,8 +8,8 @@ class Resume(models.Model):
 
 
     class WorkExperience(models.TextChoices):
-        HAVE = 'Have work experience'
-        HAVE_NOT = 'No work expirience'
+        HAVE = 'Есть опыт работы'
+        HAVE_NOT = 'Нет опыта работы'
 
 
     """Резюме"""
@@ -26,7 +26,7 @@ class Resume(models.Model):
         unique=True
     )
     hometown = models.CharField("Город проживания", max_length=100)
-    data_of_birth= models.DateTimeField("Дата рождения")
+    data_of_birth= models.DateField("Дата рождения")
     age = models.IntegerField("Возраст")
     gender = models.CharField(
         "Пол", 

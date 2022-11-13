@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+# from rest_framework_simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+#     TokenVerifyView,
+# )
 
 from django.contrib import admin
 from django.urls import (
@@ -30,27 +30,33 @@ from django.urls import (
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.vacancies.views import (
-    VacanciesViewSet,
-    # VacancyViewSet,
+from apps.auths.views import (
+    RegistrationAPIView,
+    LoginAPIView,
+    UpdatePersonalDataView,
+    ChangePasswordView,
 )
 
-# from apps.vacancies import views
+from apps.resume.views import (
+    ResumeAPIView,
+)
 
-
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('vacancies/', views.VacanciesViewSet, name="vacancies"),
-#     path('vacancy/<int:id>', views.VacancyViewSet, name="vacancy_detail"),
-# ]
+from apps.vacancies.views import (
+    VacanciesViewSet,
+    VacancyViewSet,
+)
 
 
 urlpatterns = [
     # path(settings.ADMIN_SITE_URL, admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('admin/', admin.site.urls),
+    path('api/registration/', RegistrationAPIView.as_view()),
+    path('api/login/', LoginAPIView.as_view()),
+    path('api/update/', UpdatePersonalDataView.as_view()),
+    path('api/changepass/', ChangePasswordView.as_view()),
+    path('api/resume/', ResumeAPIView.as_view()),
+    path('api/vacancies/', VacanciesViewSet.as_view({'get': 'list'})),
+    path('api/vacancy/<int:id>', VacancyViewSet.as_view({'get': 'list'})),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT
@@ -64,20 +70,19 @@ urlpatterns = [
 router: DefaultRouter = DefaultRouter(
     trailing_slash=False
 )
-router.register(
-    'vacancies', VacanciesViewSet
-)
-urlpatterns += [
-    path(
-        'api/v1/',
-        include(router.urls)
-    ),
-    path(
-        'api/vacancy/<int:id>',
-        include(router.urls)
-    ),
-    path(
-        'api/vacancies_list',
-        include(router.urls)
-    )
-]
+# router.register(
+#     'vacancies', VacanciesViewSet
+# )
+# router.register(
+#     'vacancies', VacancyViewSet
+# )
+# urlpatterns += [
+#     path(
+#         'api/vacancy/<int:id>',
+#         include(router.urls)
+#     ),
+#     path(
+#         'api/vacancies',
+#         include(router.urls)
+#     )
+# ]

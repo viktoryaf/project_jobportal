@@ -9,10 +9,10 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import (
     APIView, 
-    UpdateAPIView,
 )
+from rest_framework.generics import UpdateAPIView
 
-from .models import CustomUser
+from auths.models import CustomUser
 from auths.serializers import (
     LoginSerializer,
     RegistrationSerializer,
@@ -37,7 +37,7 @@ class RegistrationAPIView(APIView):
     def post(self, request):
         """
         Creates a new User object.
-        Phone_number, email, and password are required.
+        Email and password are required.
         Returns a JSON web token.
         """
         serializer = self.serializer_class(data=request.data)
@@ -78,10 +78,10 @@ class LogoutAPIView(APIView):
 
     def get(self, request: WSGIRequest, *args, **kwargs):
         logout(request)
-        return redirect(to="/auth/login")
+        return redirect(to="")
 
 
-class UpdatePersonalData(UpdateAPIView):
+class UpdatePersonalDataView(generics.UpdateAPIView):
 
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)

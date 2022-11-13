@@ -26,10 +26,6 @@ sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2u@bb_&t&s0@($z6=52p-d%@t8cf9%l)oh_@a7s$nko#wc#&h^'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -72,14 +68,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-        ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'auths.backends.JWTAuthentication',
-        )
-}
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-2u@bb_&t&s0@($z6=52p-d%@t8cf9%l)oh_@a7s$nko#wc#&h^'
 
 ROOT_URLCONF = 'settings.urls'
 

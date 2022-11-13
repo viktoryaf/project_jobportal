@@ -1,11 +1,11 @@
-from django.db import models
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.forms import model_to_dict
+
 #from rest_framework import generics
 
-from .models import Resume
-from .serializers import ResumeSerializer
+from resume.models import Resume
+from resume.serializers import ResumeSerializer
 
 class ResumeAPIView(APIView):
     serializer_class = ResumeSerializer

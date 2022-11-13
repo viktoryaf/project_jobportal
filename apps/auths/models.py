@@ -42,12 +42,8 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
-        'Почта/Логин',
+        'Почта',
         unique=True,
-    )
-    phone_number = models.CharField(
-        'Номер телефона',
-        max_length=11,
     )
     is_active = models.BooleanField(
         'Активность',
@@ -67,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.username
+        return self.email
 
     @property
     def token(self):

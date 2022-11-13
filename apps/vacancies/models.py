@@ -1,7 +1,42 @@
 from django.db import models
 
+from abstracts.models import AbstractsDateTime
 
-class VacancyModel(models.Model):
+from typing import Optional
+
+from django.db.models.query import QuerySet
+
+from django.db.models import F
+
+
+class VacancyQuerySet(QuerySet):
+    """VacancyQuerySet."""
+
+    def get_deleted(self) -> QuerySet['VacancyModel']:
+        return self.filter(
+            datetime_deleted__isnull=False
+        )
+
+    def get_not_deleted(self) -> QuerySet['VacancyModel']:
+        return self.filter(
+            datetime_deleted__isnull=True
+        )
+
+    def get_not_equal_updated(self) -> QuerySet['VacancyModel']:
+        return self.exclude(
+            datetime_updated=F('datetime_created')
+        )
+
+    def get_obj(self, p_key: str) -> Optional['VacancyModel']:
+        try:
+            return self.get(
+                id=p_key
+            )
+        except VacancyModel.DoesNotExist:
+            return None
+
+
+class VacancyModel(AbstractsDateTime):
     vacancy_name = models.CharField(
         verbose_name='Должность',
         max_length=55
@@ -22,12 +57,11 @@ class VacancyModel(models.Model):
         max_length=700
     )
 
-    # def __str__(self):
-    #     return self.vacancy_name
+    objects = VacancyQuerySet().as_manager()
 
     class Meta:
         ordering = (
-            'number',
+            'id',
         )
         verbose_name = 'Vacancy'
         verbose_name_plural = 'Vacancies'

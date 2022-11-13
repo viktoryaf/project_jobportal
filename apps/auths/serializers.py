@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser
 
-from .backends import authenticate
+from .backends import JWTAuthentication
 
 from django.contrib.auth.password_validation import validate_password
 
@@ -22,8 +22,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = (
-            'email', 
-            'phone_number', 
+            'email',  
             'password', 
             'token'
         )
@@ -42,7 +41,7 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, write_only=True)
 
     # Ignore these fields if they are included in the request.
-    phone_number = serializers.CharField(max_length=11, read_only=True)
+    # 
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
@@ -62,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
                 'A password is required to log in.'
             )
 
-        user = authenticate(username=email, password=password)
+        user = JWTAuthentication.authenticate(username=email, password=password)
 
         
         if user is None:
@@ -86,7 +85,6 @@ class UpdateUserSerializer(serializers.Serializer):
         fields = (
             'id',
             'email',
-            'phone_number',
         )
 
     def validate_email(self, value):
@@ -95,15 +93,15 @@ class UpdateUserSerializer(serializers.Serializer):
             raise serializers.ValidationError({"email": "This email is already in use."})
         return value
 
-    def validate_phone_number(self, value):
-        user = self.context['request'].user
-        if CustomUser.objects.exclude(pk=user.pk).filter(username=value).exists():
-            raise serializers.ValidationError({"phone_number": "This phone_number is already in use."})
-        return value
+    # def validate_phone_number(self, value):
+    #     user = self.context['request'].user
+    #     if CustomUser.objects.exclude(pk=user.pk).filter(username=value).exists():
+    #         raise serializers.ValidationError({"phone_number": "This phone_number is already in use."})
+    #     return value
 
     def update(self, instance, validated_data):
         instance.email = validated_data['email']
-        instance.phone_number = validated_data['phone_number']
+        # instance.phone_number = validated_data['phone_number']
 
         instance.save()
 

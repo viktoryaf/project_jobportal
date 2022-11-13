@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.db.models import QuerySet
 
 from rest_framework.viewsets import ViewSet
@@ -68,26 +66,72 @@ class VacanciesViewSet(
             }
         )
 
+    def create(self, request: Request) -> Response:
+
+        serializer: VacanciesSerializer = \
+            VacanciesSerializer(
+                data=request.data
+            )
+        if not serializer.is_valid:
+            return self.get_json_response(
+                {
+                    'message': 'Обьект не был создан',
+                    'payload': request.data
+                }
+            )
+            
+        serializer.save()
+
+        return self.get_json_response(
+            {
+                'message': 'Обьект был создан',
+            }
+        )
+
+    def update(self, request: Request, pk: str) -> Response:
+
+        obj: VacancyModel = self.get_obj_or_raise(
+            self.queryset,
+            pk
+        )
+        serializer: VacanciesSerializer = \
+            VacanciesSerializer(
+                obj, 
+                data=request.data
+            )
+        request.data['obj_id'] = obj.id
+
+        if not serializer.is_valid:
+            return self.get_json_response(
+                {
+                    'message': 'Обьект не был обновлен',
+                    'payload': request.data
+                }
+            )
+        serializer.save()
+
+        return self.get_json_response(
+            {
+                'message': 'Обьект был обновлен',
+                'payload': request.data
+            }
+        )
+
 
 class VacancyViewSet(ViewSet):
     """VacancyViewSet. """
 
-    queryset: QuerySet[VacancyModel] = \
-        VacancyModel.objects.filter(pk=id)
+    def get_queryset(self):
+        queryset: QuerySet[VacancyModel] = \
+            VacancyModel.objects.filter(pk=self.kwargs['id'])
+        return queryset
 
-    @action(
-        methods=['get'],
-        detail=False,
-        url_path='list',
-        permission_classes=(
-            AllowAny,
-        )
-    )
+        
     def list(self, request: Request) -> Response:
 
         serializer: VacancySerializer = \
             VacancySerializer(
-                self.queryset,
+                self.get_queryset,
                 many=True
             )
         return self.get_json_response(
