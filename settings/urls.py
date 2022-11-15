@@ -42,8 +42,12 @@ from apps.resume.views import (
 )
 
 from apps.vacancies.views import (
-    VacanciesViewSet,
-    VacancyViewSet,
+    VacanciesView,
+    VacancyView,
+)
+
+from apps.responses.views import (
+    ResponsesView,
 )
 
 
@@ -55,8 +59,9 @@ urlpatterns = [
     path('api/update/', UpdatePersonalDataView.as_view()),
     path('api/changepass/', ChangePasswordView.as_view()),
     path('api/resume/', ResumeAPIView.as_view()),
-    path('api/vacancies/', VacanciesViewSet.as_view({'get': 'list'})),
-    path('api/vacancy/<int:id>', VacancyViewSet.as_view({'get': 'list'})),
+    path('api/vacancies/', VacanciesView.as_view()),
+    path('api/vacancy/<int:id>', VacancyView.as_view()),
+    path('api/responses/', ResponsesView.as_view()),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

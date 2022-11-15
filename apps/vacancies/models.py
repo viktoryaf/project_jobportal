@@ -1,6 +1,6 @@
 from django.db import models
 
-from abstracts.models import AbstractsDateTime
+# from abstracts.models import AbstractsDateTime
 
 from typing import Optional
 
@@ -36,7 +36,7 @@ class VacancyQuerySet(QuerySet):
             return None
 
 
-class VacancyModel(AbstractsDateTime):
+class VacancyModel(models.Model):
     vacancy_name = models.CharField(
         verbose_name='Должность',
         max_length=55
@@ -61,7 +61,7 @@ class VacancyModel(AbstractsDateTime):
 
     class Meta:
         ordering = (
-            'id',
+            'vacancy_name',
         )
         verbose_name = 'Vacancy'
         verbose_name_plural = 'Vacancies'

@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 
-from rest_framework.viewsets import ViewSet
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -19,10 +19,10 @@ from vacancies.serializers import (
 from vacancies.models import VacancyModel
 
 
-class VacanciesViewSet(
+class VacanciesView(
     ValidationMixin,
     ResponseMixin,
-    ViewSet
+    APIView
 ):
     """VacanciesViewSet."""
 
@@ -118,7 +118,7 @@ class VacanciesViewSet(
         )
 
 
-class VacancyViewSet(ViewSet):
+class VacancyView(APIView):
     """VacancyViewSet. """
 
     def get_queryset(self):

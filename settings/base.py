@@ -54,6 +54,7 @@ PROJECT_APPS = [
     'vacancies.apps.VacanciesConfig',
     'search.apps.SearchConfig',
     'resume.apps.ResumeConfig',
+    'responses.apps.ResponsesConfig',
 ]
 
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
