@@ -44,6 +44,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         'Почта',
         unique=True,
+        null=True
     )
     is_active = models.BooleanField(
         'Активность',

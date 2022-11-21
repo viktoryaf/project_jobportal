@@ -75,7 +75,8 @@ class LoginSerializer(serializers.Serializer):
             )
 
         return {
-            'token': user.token,
+            'email': user.email,
+            'token': user.token
         }
 
 

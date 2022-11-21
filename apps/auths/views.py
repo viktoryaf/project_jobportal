@@ -11,6 +11,7 @@ from rest_framework.views import (
     APIView, 
 )
 from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from auths.models import CustomUser
 from auths.serializers import (
@@ -19,6 +20,7 @@ from auths.serializers import (
     UpdateUserSerializer,
     ChangePasswordSerializer,
 )
+from auths.renderers import UserJSONRenderer
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import (
@@ -29,35 +31,29 @@ from django.contrib.auth import logout
 
 class RegistrationAPIView(APIView):
     """
-    Registers a new user.
+    Разрешить всем пользователям (аутентифицированным и нет) доступ к данному эндпоинту.
     """
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
+    renderer_classes = (UserJSONRenderer,)
 
     def post(self, request):
-        """
-        Creates a new User object.
-        Email and password are required.
-        Returns a JSON web token.
-        """
-        serializer = self.serializer_class(data=request.data)
+        user = request.data.get('user', {})
+
+        serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(
-            {
-                'token': serializer.data.get('token', None),
-            },
-            status=status.HTTP_201_CREATED,
-        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class LoginAPIView(APIView):
     """
-    Logs in an existing user.
+    Авторизация для существующих пользователей.
     """
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
+    renderer_classes = (UserJSONRenderer,)
 
     def post(self, request):
         """
@@ -65,7 +61,9 @@ class LoginAPIView(APIView):
         Email and password are required.
         Returns a JSON web token.
         """
-        serializer = self.serializer_class(data=request.data)
+        user = request.data.get('user', {})
+
+        serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -73,7 +71,7 @@ class LoginAPIView(APIView):
 
 class LogoutAPIView(APIView):
     """
-    Logs out an existing user.
+    Выход для существующих пользователей.
     """
 
     def get(self, request: WSGIRequest, *args, **kwargs):
@@ -81,14 +79,46 @@ class LogoutAPIView(APIView):
         return redirect(to="")
 
 
-class UpdatePersonalDataView(generics.UpdateAPIView):
+# class UpdatePersonalDataView(generics.UpdateAPIView):
+#     """
+#     Изменение личных данных пользователя.
+#     """
 
-    queryset = CustomUser.objects.all()
+#     queryset = CustomUser.objects.all()
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = UpdateUserSerializer
+
+
+class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    Изменение личных данных пользователя.
+    """
+
     permission_classes = (IsAuthenticated,)
+    renderer_classes = (UserJSONRenderer,)
     serializer_class = UpdateUserSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        serializer = self.serializer_class(request.user)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        serializer_data = request.data.get('user', {})
+
+        serializer = self.serializer_class(
+            request.user, data=serializer_data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(generics.UpdateAPIView):
+    """
+    Изменение пароля.
+    """
 
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)

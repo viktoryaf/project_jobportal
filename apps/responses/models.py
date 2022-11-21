@@ -1,13 +1,13 @@
 from django.db import models
 
-from resume.models import Resume
+from vacancies.models import VacancyModel
 
 
 class ResponsesModel(models.Model):
     """ResponsesModel. """
 
     resume = models.ForeignKey(
-        Resume,
+        VacancyModel,
         on_delete = models.CASCADE
     )
 

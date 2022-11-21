@@ -33,7 +33,7 @@ from django.conf.urls.static import static
 from apps.auths.views import (
     RegistrationAPIView,
     LoginAPIView,
-    UpdatePersonalDataView,
+    UserRetrieveUpdateAPIView,
     ChangePasswordView,
 )
 
@@ -47,7 +47,7 @@ from apps.vacancies.views import (
 )
 
 from apps.responses.views import (
-    ResponsesView,
+    ResponsesAPIView,
 )
 
 
@@ -56,12 +56,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/registration/', RegistrationAPIView.as_view()),
     path('api/login/', LoginAPIView.as_view()),
-    path('api/update/', UpdatePersonalDataView.as_view()),
+    path('api/update/', UserRetrieveUpdateAPIView.as_view()),
     path('api/changepass/', ChangePasswordView.as_view()),
     path('api/resume/', ResumeAPIView.as_view()),
     path('api/vacancies/', VacanciesView.as_view()),
     path('api/vacancy/<int:id>', VacancyView.as_view()),
-    path('api/responses/', ResponsesView.as_view()),
+    path('api/responses/', ResponsesAPIView.as_view()),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT
