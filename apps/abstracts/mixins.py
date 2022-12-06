@@ -7,6 +7,8 @@ from django.db.models import QuerySet
 
 from abstracts.validators import APIValidator
 
+from vacancies.models import VacancyModel
+
 
 class ResponseMixin:
     """ResponseMixin."""
@@ -29,15 +31,13 @@ class ValidationMixin:
     def get_obj_if_exists_raise_if_doesnt(
         self,
         queryset: QuerySet[Any],
-        p_key: str
+        id
     ) -> None:
 
-        obj: Any = queryset.get_obj(
-            p_key
-        )
+        obj: Any = queryset
         if not obj:
             raise APIValidator(
-                f'Объект не найден: {p_key}',
+                f'Объект не найден: {id}',
                 'error',
                 '404'
             )

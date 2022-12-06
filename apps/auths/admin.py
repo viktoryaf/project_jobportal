@@ -80,7 +80,4 @@ class CustomUserAdmin(UserAdmin):
             'email',
         )
 
-
-admin.site.register(
-    CustomUser, CustomUserAdmin
-)
+admin.site.register(CustomUser, CustomUserAdmin)

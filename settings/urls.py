@@ -38,7 +38,7 @@ from apps.auths.views import (
 )
 
 from apps.resume.views import (
-    ResumeAPIView,
+    ResumeListAPIView,
 )
 
 from apps.vacancies.views import (
@@ -53,12 +53,20 @@ from apps.responses.views import (
 
 urlpatterns = [
     # path(settings.ADMIN_SITE_URL, admin.site.urls),
+    # admin
     path('admin/', admin.site.urls),
+
+    # registration
     path('api/registration/', RegistrationAPIView.as_view()),
     path('api/login/', LoginAPIView.as_view()),
-    path('api/update/', UserRetrieveUpdateAPIView.as_view()),
+    path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
     path('api/changepass/', ChangePasswordView.as_view()),
-    path('api/resume/', ResumeAPIView.as_view()),
+
+    # resume
+    path('api/resume/', ResumeListAPIView.as_view()),
+    # path('api/resume/update'),
+
+    # vacancy
     path('api/vacancies/', VacanciesView.as_view()),
     path('api/vacancy/<int:id>', VacancyView.as_view()),
     path('api/responses/', ResponsesAPIView.as_view()),

@@ -44,6 +44,14 @@ class LoginSerializer(serializers.Serializer):
     # 
     token = serializers.CharField(max_length=255, read_only=True)
 
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email',  
+            'password', 
+            'token'
+        )
+
     def validate(self, data):
         """
         Validates user data.

@@ -2,7 +2,11 @@ from django.db import models
 
 # from abstracts.models import AbstractsDateTime
 
-from typing import Optional
+from typing import (
+    Optional,
+    Any
+)
+from datetime import datetime
 
 from django.db.models.query import QuerySet
 
@@ -27,13 +31,24 @@ class VacancyQuerySet(QuerySet):
             datetime_updated=F('datetime_created')
         )
 
-    def get_obj(self, p_key: str) -> Optional['VacancyModel']:
-        try:
-            return self.get(
-                id=p_key
-            )
-        except VacancyModel.DoesNotExist:
-            return None
+    # def get_obj(self, id) -> Optional['VacancyModel']:
+    #     try:
+    #         return self.get(
+    #             id=id
+    #         )
+    #     except VacancyModel.DoesNotExist:
+    #         return None
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def delete(self) -> None:
+        self.datetime_deleted = datetime.now()
+        self.save(
+            update_field=['datetime_deleted']
+        )
+        # super().delete()
 
 
 class VacancyModel(models.Model):
@@ -61,7 +76,7 @@ class VacancyModel(models.Model):
 
     class Meta:
         ordering = (
-            'vacancy_name',
+            'id',
         )
         verbose_name = 'Vacancy'
         verbose_name_plural = 'Vacancies'

@@ -1,4 +1,50 @@
 from django.db import models
+from django.db.models.query import QuerySet
+
+from typing import (
+    Optional,
+    Any
+)
+
+from datetime import datetime
+
+
+class ResumeQuerySet(QuerySet):
+    """VacancyQuerySet."""
+
+    # def get_deleted(self) -> QuerySet['VacancyModel']:
+    #     return self.filter(
+    #         datetime_deleted__isnull=False
+    #     )
+
+    # def get_not_deleted(self) -> QuerySet['VacancyModel']:
+    #     return self.filter(
+    #         datetime_deleted__isnull=True
+    #     )
+
+    # def get_not_equal_updated(self) -> QuerySet['VacancyModel']:
+    #     return self.exclude(
+    #         datetime_updated=F('datetime_created')
+    #     )
+
+    # def get_obj(self, id) -> Optional['VacancyModel']:
+    #     try:
+    #         return self.get(
+    #             id=id
+    #         )
+    #     except VacancyModel.DoesNotExist:
+    #         return None
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def delete(self) -> None:
+        self.datetime_deleted = datetime.now()
+        self.save(
+            update_field=['datetime_deleted']
+        )
+        # super().delete()
 
 
 class Resume(models.Model):
@@ -40,6 +86,8 @@ class Resume(models.Model):
         choices=WorkExperience.choices,
         default=WorkExperience.HAVE
     )
+
+    objects = ResumeQuerySet().as_manager()
 
     def __str__(self):
         return self.name

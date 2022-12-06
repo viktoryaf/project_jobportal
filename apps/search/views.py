@@ -6,6 +6,8 @@ from rest_framework import (
 from vacancies.models import VacancyModel
 from vacancies.serializers import VacanciesSerializer
 
+from django.db.models import Q
+
 
 class SearchVacancies(generics.ListAPIView):
     queryset = VacancyModel.objects.all()
@@ -17,3 +19,7 @@ class SearchVacancies(generics.ListAPIView):
         'salary', 
         'city',
     ]
+
+    def form_valid(self, form):
+        request = VacancyModel.objects.filter(Q(self.request is True))
+        return request

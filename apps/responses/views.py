@@ -24,3 +24,11 @@ class ResponsesAPIView(
     def get(self, request):
         r_get = ResponsesModel.objects.all().values()
         return Response({'posts': list(r_get)})
+
+
+class ApplyForJobAPIView(APIView):
+    """
+    Откликнуться на вакансию.
+    """
+
+    

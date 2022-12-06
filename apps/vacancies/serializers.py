@@ -6,6 +6,10 @@ from rest_framework.serializers import (
     IntegerField
 )
 
+from typing import (
+    Optional,
+    Any
+)
 
 class VacanciesSerializer(ModelSerializer):
     """VacanciesSerializer. """
