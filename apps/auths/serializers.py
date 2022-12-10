@@ -7,6 +7,8 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+    # number = serializers.CharField(max_length=11)
 
     # The password must be validated and should not be read by the client
     password = serializers.CharField(
@@ -22,7 +24,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = (
-            'email',  
+            'email',
+            # 'number', 
             'password', 
             'token'
         )

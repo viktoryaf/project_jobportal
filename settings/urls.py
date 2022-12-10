@@ -39,6 +39,7 @@ from apps.auths.views import (
 
 from apps.resume.views import (
     ResumeListAPIView,
+    ResumeAPIView,
 )
 
 from apps.vacancies.views import (
@@ -59,17 +60,23 @@ urlpatterns = [
     # registration
     path('api/registration/', RegistrationAPIView.as_view()),
     path('api/login/', LoginAPIView.as_view()),
-    path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
     path('api/changepass/', ChangePasswordView.as_view()),
 
+    # change of personal data
+    path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
+
     # resume
-    path('api/resume/', ResumeListAPIView.as_view()),
+    path('api/resume_list/', ResumeListAPIView.as_view()),
+    path('api/resume/<int:id>', ResumeAPIView.as_view()),
     # path('api/resume/update'),
 
     # vacancy
     path('api/vacancies/', VacanciesView.as_view()),
     path('api/vacancy/<int:id>', VacancyView.as_view()),
     path('api/responses/', ResponsesAPIView.as_view()),
+
+    # search
+
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

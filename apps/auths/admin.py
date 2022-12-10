@@ -15,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': (
                 'email',
                 'password',
+                'phone_number'
                 'date_joined',
             )
         }),

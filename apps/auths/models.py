@@ -46,6 +46,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True
     )
+    # number = models.CharField(
+    #     'Номер телефона',
+    #     max_length=11,
+    #     unique=True,
+    # )
     is_active = models.BooleanField(
         'Активность',
         default=True,

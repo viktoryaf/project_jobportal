@@ -93,7 +93,7 @@ class VacancyView(
             }
         )
 
-    def destroy(self, request: Request, id) -> Response:
+    def delete(self, request: Request, id) -> Response:
         queryset: QuerySet[VacancyModel] = \
             VacancyModel.objects.get(id=id)
         obj: VacancyModel = self.get_obj_if_exists_raise_if_doesnt(

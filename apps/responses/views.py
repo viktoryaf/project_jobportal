@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from django.db.models import QuerySet
+
+
 from abstracts.mixins import (
     ResponseMixin,
     ValidationMixin,
@@ -22,8 +25,13 @@ class ResponsesAPIView(
     model = ResponsesModel
     
     def get(self, request):
-        r_get = ResponsesModel.objects.all().values()
-        return Response({'posts': list(r_get)})
+        queryset: QuerySet[ResponsesModel] = \
+            ResponsesModel.objects.all()
+        serializer_for_queryset = ResumeSerializer(
+            instance=queryset, # Передаём набор записей
+            many=True # Указываем, что на вход подаётся именно набор записей
+        )
+        return self.get_json_response(serializer_for_queryset.data)
 
 
 class ApplyForJobAPIView(APIView):

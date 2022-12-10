@@ -69,7 +69,7 @@ class ResumeAPIView(
             }
         )
 
-    def destroy(self, request: Request, id) -> Response:
+    def delete(self, request: Request, id) -> Response:
         queryset: QuerySet[Resume] = \
             Resume.objects.get(id=id)
         obj: Resume = self.get_obj_if_exists_raise_if_doesnt(
@@ -105,31 +105,3 @@ class ResumeListAPIView(
             many=True # Указываем, что на вход подаётся именно набор записей
         )
         return self.get_json_response(serializer_for_queryset.data)
-
-    # def post(self, request: Request) -> Response:
-    #     serializer: ResumeSerializer = \
-    #          ResumeSerializer.create(data=request.data)
-    #     if not serializer.is_valid():
-    #         return self.get_json_response(
-    #             {
-    #                 'message': 'Обьект не был создан',
-    #                 'payload': request
-    #             }
-    #         )
-            
-    #     serializer.save()
-
-    #     return self.get_json_response(
-    #         {
-    #             'message': 'Обьект был создан',
-    #             'post': serializer
-    #         }
-    #     )
-
-    # def post(self, request):
-    #     serializer = ResumeListSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-    #     else:
-    #         return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
