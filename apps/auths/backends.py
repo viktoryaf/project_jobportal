@@ -4,14 +4,14 @@ from django.conf import settings
 
 from rest_framework import authentication, exceptions
 
-from .models import CustomUser
+from auths.models import CustomUser
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
     authentication_header_prefix = 'Bearer'
 
     def authenticate(self, request):
-        request.user = None
+        # request.user = None
 
         # `auth_header` should be an array with two elements: 1) the name of
         # the authentication header (in this case, "Token") and 2) the JWT

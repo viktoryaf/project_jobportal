@@ -47,6 +47,10 @@ class ResumeQuerySet(QuerySet):
         # super().delete()
 
 
+# class Images(models.Model):
+#     image = models.ImageField("Примеры работ (портфолио)", max_length=10)
+
+
 class Resume(models.Model):
     class GenderChoices(models.TextChoices):
         FEMALE = 'Female'
@@ -86,6 +90,9 @@ class Resume(models.Model):
         choices=WorkExperience.choices,
         default=WorkExperience.HAVE
     )
+
+    # image = models.ForeignKey(Images, on_delete=models.CASCADE)
+    image = models.ImageField("Примеры работ (портфолио)", max_length=10)
 
     objects = ResumeQuerySet().as_manager()
 

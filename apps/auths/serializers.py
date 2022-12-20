@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import CustomUser
+from auths.models import CustomUser
 
-from .backends import JWTAuthentication
+from auths.backends import JWTAuthentication
 
 from django.contrib.auth.password_validation import validate_password
 
@@ -33,6 +33,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
 
+from django.contrib.auth import authenticate
+from rest_framework import serializers
+from rest_framework.authtoken.models import Token
+
 
 class LoginSerializer(serializers.Serializer):
     """
@@ -40,8 +44,8 @@ class LoginSerializer(serializers.Serializer):
     Email and password are required.
     Returns a JSON web token.
     """
-    email = serializers.EmailField(write_only=True)
-    password = serializers.CharField(max_length=128, write_only=True)
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(max_length=128, required=True)
 
     # Ignore these fields if they are included in the request.
     # 
@@ -51,44 +55,44 @@ class LoginSerializer(serializers.Serializer):
         model = CustomUser
         fields = (
             'email',  
-            'password', 
-            'token'
+            'password'
         )
+        read_only_fields = ('token')
 
-    def validate(self, data):
-        """
-        Validates user data.
-        """
-        email = data.get('email', None)
-        password = data.get('password', None)
+    # def validate(self, request):
+    #     """
+    #     Validates user data.
+    #     """
+    #     email = request.get('email', None)
+    #     password = request.get('password', None)
 
-        if email is None:
-            raise serializers.ValidationError(
-                'An email address is required to log in.'
-            )
+    #     if email is None:
+    #         raise serializers.ValidationError(
+    #             'An email address is required to log in.'
+    #         )
 
-        if password is None:
-            raise serializers.ValidationError(
-                'A password is required to log in.'
-            )
+    #     if password is None:
+    #         raise serializers.ValidationError(
+    #             'A password is required to log in.'
+    #         )
 
-        user = JWTAuthentication.authenticate(username=email, password=password)
+    #     user = authenticate(username=email, password=password)
 
         
-        if user is None:
-            raise serializers.ValidationError(
-                'A user with this email and password was not found.'
-            )
+    #     if user is None:
+    #         raise serializers.ValidationError(
+    #             'A user with this email and password was not found.'
+    #         )
 
-        if not user.is_active:
-            raise serializers.ValidationError(
-                'This user has been deactivated.'
-            )
+    #     if not user.is_active:
+    #         raise serializers.ValidationError(
+    #             'This user has been deactivated.'
+    #         )
 
-        return {
-            'email': user.email,
-            'token': user.token
-        }
+    #     return {
+    #         'email': user.email,
+    #         'token': user.token
+    #     }
 
 
 class UpdateUserSerializer(serializers.Serializer):

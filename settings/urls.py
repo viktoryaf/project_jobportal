@@ -30,12 +30,12 @@ from django.urls import (
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.auths.views import (
-    RegistrationAPIView,
-    LoginAPIView,
-    UserRetrieveUpdateAPIView,
-    ChangePasswordView,
-)
+# from apps.auths.views import (
+#     RegistrationAPIView,
+#     LoginAPIView,
+#     UserRetrieveUpdateAPIView,
+#     ChangePasswordView,
+# )
 
 from apps.resume.views import (
     ResumeListAPIView,
@@ -51,6 +51,13 @@ from apps.responses.views import (
     ResponsesAPIView,
 )
 
+from apps.search.views import SearchVacancies
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     # path(settings.ADMIN_SITE_URL, admin.site.urls),
@@ -58,12 +65,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # registration
-    path('api/registration/', RegistrationAPIView.as_view()),
-    path('api/login/', LoginAPIView.as_view()),
-    path('api/changepass/', ChangePasswordView.as_view()),
+    # path('api/registration/', RegistrationAPIView.as_view()),
+    # path('api/login/', LoginAPIView.as_view()),
+    # path('api/changepass/', ChangePasswordView.as_view()),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # change of personal data
-    path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
+    # path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
 
     # resume
     path('api/resume_list/', ResumeListAPIView.as_view()),
@@ -76,6 +86,7 @@ urlpatterns = [
     path('api/responses/', ResponsesAPIView.as_view()),
 
     # search
+    path('api/search/', SearchVacancies.as_view()),
 
 ] + static(
     settings.STATIC_URL,

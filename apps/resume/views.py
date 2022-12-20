@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 
 from django.forms import model_to_dict
 from django.db.models import QuerySet
@@ -20,6 +21,31 @@ from abstracts.mixins import (
 )
 
 
+class ResumeListPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+class ResumeListAPIView(
+    ValidationMixin,
+    ResponseMixin,
+    APIView
+):
+    serializer_class = ResumeListSerializer
+    pagination_class = ResumeListPagination
+    model = Resume
+    
+    def get(self, request: Request) -> Response:   
+        queryset: QuerySet[Resume] = \
+            Resume.objects.all()
+        serializer: ResumeSerializer = ResumeSerializer(
+            instance=queryset, # Передаём набор записей
+            many=True # Указываем, что на вход подаётся именно набор записей
+        )
+        return self.get_json_response(serializer.data)
+
+
 class ResumeAPIView(
     ValidationMixin,
     ResponseMixin,
@@ -30,19 +56,33 @@ class ResumeAPIView(
         queryset: QuerySet[Resume] = \
             Resume.objects.filter(id=id)
 
-        serializer_for_queryset = ResumeSerializer(
+        serializer: ResumeSerializer = ResumeSerializer(
                 instance=queryset, # Передаём набор записей
                 many=True # Указываем, что на вход подаётся именно набор записей
             )
-        return self.get_json_response(serializer_for_queryset.data)
+        return self.get_json_response(serializer.data)
 
     def post(self, request, id):
         serializer = ResumeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+            return self.get_json_response(
+                {
+                    'status': 'success',
+                    'message': 'Резюме было создано', 
+                    'data': serializer.data
+                }, 
+                status=status.HTTP_200_OK
+            )
         else:
-            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return self.get_json_response(
+                {
+                    'error': 'error',
+                    'message': 'Резюме не было создано',
+                    'data': serializer.errors
+                }, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     def put(self, request: Request, id) -> Response:
         obj: Resume = Resume.objects.get(id=id)
@@ -76,6 +116,13 @@ class ResumeAPIView(
             queryset,
             id
         )
+        if not obj.is_valid():
+            return self.get_json_response(
+                {
+                    'message': 'Несуществующий объект',
+                    'payload': obj.errors
+                }
+            )
         obj.delete()
 
         return self.get_json_response(
@@ -87,21 +134,3 @@ class ResumeAPIView(
                 }
             }
         )
-
-
-class ResumeListAPIView(
-    ValidationMixin,
-    ResponseMixin,
-    APIView
-):
-    serializer_class = ResumeListSerializer
-    model = Resume
-    
-    def get(self, request: Request) -> Response:   
-        queryset: QuerySet[Resume] = \
-            Resume.objects.all()
-        serializer_for_queryset = ResumeSerializer(
-            instance=queryset, # Передаём набор записей
-            many=True # Указываем, что на вход подаётся именно набор записей
-        )
-        return self.get_json_response(serializer_for_queryset.data)

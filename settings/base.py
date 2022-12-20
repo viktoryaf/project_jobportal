@@ -74,6 +74,22 @@ SECRET_KEY = 'django-insecure-2u@bb_&t&s0@($z6=52p-d%@t8cf9%l)oh_@a7s$nko#wc#&h^
 
 ROOT_URLCONF = 'settings.urls'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50
+}
+{
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+}
+{
+    'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+            ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_simplejwt.backends.JWTAuthentication',
+            )
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -128,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Almaty'
 
 USE_I18N = True
 

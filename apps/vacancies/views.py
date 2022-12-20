@@ -1,5 +1,5 @@
 from django.db.models import QuerySet
-from django.forms import model_to_dict
+# from django.forms import model_to_dict
 
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -7,6 +7,8 @@ from rest_framework.response import Response
 # from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 from abstracts.mixins import (
     ResponseMixin,
@@ -21,6 +23,12 @@ from vacancies.serializers import (
 from vacancies.models import VacancyModel
 
 
+class VacanciesViewPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class VacanciesView(
     ValidationMixin,
     ResponseMixin,
@@ -29,16 +37,22 @@ class VacanciesView(
     """VacanciesView."""
 
     serializer_class = VacanciesSerializer
+    pagination_class = VacanciesViewPagination
     model = VacancyModel
 
     def get(self, request: Request) -> Response:   
         queryset: QuerySet[VacancyModel] = \
             VacancyModel.objects.all()
-        serializer_for_queryset = VacanciesSerializer(
+        serializer: VacancySerializer = VacanciesSerializer(
             instance=queryset, # Передаём набор записей
             many=True # Указываем, что на вход подаётся именно набор записей
         )
-        return self.get_json_response(serializer_for_queryset.data)
+        return self.get_json_response(
+            {
+                'message': '',
+                'payload': serializer.data
+            }
+        )
 
 
 class VacancyView(
@@ -49,24 +63,47 @@ class VacancyView(
     """VacancyView. """
     serializer_class = VacancySerializer
     model = VacancyModel
+    # permission_classes = [IsAuthenticated]
+    queryset = VacancyModel.objects.all()
+    # authentication_classes = (TokenAuthentication, )
 
     def get(self, request: Request, id) -> Response: 
         queryset: QuerySet[VacancyModel] = \
             VacancyModel.objects.filter(id=id)
 
-        serializer_for_queryset = VacancySerializer(
+        serializer: VacancySerializer = VacancySerializer(
                 instance=queryset, # Передаём набор записей
                 many=True # Указываем, что на вход подаётся именно набор записей
             )
-        return self.get_json_response(serializer_for_queryset.data)
+        return self.get_json_response(
+            {
+                'message': '',
+                'payload': serializer.data
+            }
+        )
 
     def post(self, request, id):
-        serializer = VacancySerializer(data=request.data)
+        serializer: VacancySerializer = \
+            VacancySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+            return self.get_json_response(
+                {
+                    'status': 'success',
+                    'message': 'Вакансия была создана', 
+                    'data': serializer.data
+                }, 
+                status=status.HTTP_200_OK
+            )
         else:
-            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return self.get_json_response(
+                {
+                    'error': 'error',
+                    'message': 'Вакансия не была создана',
+                    'data': serializer.errors
+                }, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     def put(self, request: Request, id) -> Response:
         obj: VacancyModel = VacancyModel.objects.get(id=id)
@@ -80,7 +117,7 @@ class VacancyView(
         if not serializer.is_valid():
             return self.get_json_response(
                 {
-                    'message': 'Обьект не был обновлен',
+                    'message': 'Вакансия не была обновлена',
                     'payload': serializer.errors
                 }
             )
@@ -88,7 +125,7 @@ class VacancyView(
 
         return self.get_json_response(
             {
-                'message': 'Обьект был обновлен',
+                'message': 'Вакансия была обновлена',
                 'payload': serializer.data
             }
         )
@@ -100,14 +137,20 @@ class VacancyView(
             queryset,
             id
         )
+        if not obj.is_valid():
+            return self.get_json_response(
+                {
+                    'message': 'Несуществующий объект',
+                    'payload': obj.errors
+                }
+            )
         obj.delete()
 
         return self.get_json_response(
             {
-                'message': 'Объект был удален',
+                'message': 'Вакансия была удалена',
                 'payload': {
                     'obj_id': f'{obj.id}',
-                    # 'obj_deleted': f'{obj.datetime_deleted}',
                 }
             }
         )

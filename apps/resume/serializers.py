@@ -30,6 +30,7 @@ class ResumeSerializer(serializers.Serializer):
     age = serializers.IntegerField(required=False)
     gender = serializers.CharField(required=False)
     work_experience = serializers.CharField(required=False)
+    image = serializers.ImageField(required=True)
     class Meta:
         model = Resume
         fields = (
@@ -41,7 +42,8 @@ class ResumeSerializer(serializers.Serializer):
             'data_of_birth',
             'age',
             'gender',
-            'work_experience'
+            'work_experience',
+            'image'
         )
 
     def create(self, validated_data):

@@ -7,14 +7,14 @@ ADMIN_SITE_URL = 'root'
 
 # ------------------------------------------------
 # DJANGO REST FRAMEWORK
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-        ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'auths.backends.JWTAuthentication',
-        )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#         ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'auths.backends.JWTAuthentication',
+#         )
+# }
 
 # -------------------------------------------------
 # JSON WEB TOKEN

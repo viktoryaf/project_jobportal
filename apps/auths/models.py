@@ -59,7 +59,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         'Статус менеджера',
         default=False,
     )
-
     date_joined = models.DateTimeField(
         'Время создания',
         default=timezone.now,
@@ -85,7 +84,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         token = jwt.encode({
             'id': self.pk,
-            'exp': int(dt.strftime('%s'))
+            'exp': int(dt.strftime("%S")),
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
