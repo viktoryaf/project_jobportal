@@ -27,7 +27,7 @@ sys.path.append(os.path.join(BASE_DIR, 'apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = []
 
@@ -45,6 +45,8 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    'djoser',
     'django_filters',
 ]
 
@@ -61,6 +63,7 @@ INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,7 +73,7 @@ MIDDLEWARE = [
 ]
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2u@bb_&t&s0@($z6=52p-d%@t8cf9%l)oh_@a7s$nko#wc#&h^'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-2u@bb_&t&s0@($z6=52p-d%@t8cf9%l)oh_@a7s$nko#wc#&h^')
 
 ROOT_URLCONF = 'settings.urls'
 
@@ -87,7 +90,16 @@ REST_FRAMEWORK = {
             ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework_simplejwt.backends.JWTAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
             )
+}
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
 }
 
 TEMPLATES = [
