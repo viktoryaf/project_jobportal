@@ -70,24 +70,24 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    @property
-    def token(self):
-        return self._generate_jwt_token()
+    # @property
+    # def token(self):
+    #     return self._generate_jwt_token()
 
-    def _generate_jwt_token(self):
-        """
-        Создает веб-токен JSON, в котором хранится идентификатор
-        этого пользователя и срок его действия
-        составляет 60 дней в будущем.
-        """
-        dt = datetime.now() + timedelta(days=60)
+    # def _generate_jwt_token(self):
+    #     """
+    #     Создает веб-токен JSON, в котором хранится идентификатор
+    #     этого пользователя и срок его действия
+    #     составляет 60 дней в будущем.
+    #     """
+    #     dt = datetime.now() + timedelta(days=60)
 
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(dt.strftime("%S")),
-        }, settings.SECRET_KEY, algorithm='HS256')
+    #     token = jwt.encode({
+    #         'id': self.pk,
+    #         'exp': int(dt.strftime("%S")),
+    #     }, settings.SECRET_KEY, algorithm='HS256')
 
-        return token.decode('utf-8')
+    #     return token.decode('utf-8')
 
     class Meta:
         ordering = (

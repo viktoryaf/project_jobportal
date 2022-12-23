@@ -92,7 +92,7 @@ class Resume(models.Model):
     )
 
     # image = models.ForeignKey(Images, on_delete=models.CASCADE)
-    image = models.ImageField("Примеры работ (портфолио)", max_length=10)
+    image = models.ImageField("Примеры работ (портфолио)", max_length=10, blank=True)
 
     objects = ResumeQuerySet().as_manager()
 

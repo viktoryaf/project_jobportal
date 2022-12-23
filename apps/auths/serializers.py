@@ -1,37 +1,37 @@
-# from rest_framework import serializers
-# from auths.models import CustomUser
+from rest_framework import serializers
+from auths.models import CustomUser
 
-# from auths.backends import JWTAuthentication
+from auths.backends import JWTAuthentication
 
-# from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.password_validation import validate_password
 
 
-# class RegistrationSerializer(serializers.ModelSerializer):
-#     email = serializers.EmailField(write_only=True)
-#     # number = serializers.CharField(max_length=11)
+class RegistrationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+    # number = serializers.CharField(max_length=11)
 
-#     # The password must be validated and should not be read by the client
-#     password = serializers.CharField(
-#         max_length=128,
-#         min_length=8,
-#         write_only=True,
-#     )
+    # The password must be validated and should not be read by the client
+    password = serializers.CharField(
+        max_length=128,
+        min_length=8,
+        write_only=True,
+    )
 
-#     # The client should not be able to send a token along with a registration
-#     # request. Making `token` read-only handles that for us.
-#     token = serializers.CharField(max_length=255, read_only=True)
+    # The client should not be able to send a token along with a registration
+    # request. Making `token` read-only handles that for us.
+    token = serializers.CharField(max_length=255, read_only=True)
 
-#     class Meta:
-#         model = CustomUser
-#         fields = (
-#             'email',
-#             # 'number', 
-#             'password', 
-#             'token'
-#         )
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email',
+            # 'number', 
+            'password', 
+            'token'
+        )
 
-#     def create(self, validated_data):
-#         return CustomUser.objects.create_user(**validated_data)
+    def create(self, validated_data):
+        return CustomUser.objects.create_user(**validated_data)
 
 # from django.contrib.auth import authenticate
 # from rest_framework import serializers

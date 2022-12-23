@@ -24,6 +24,7 @@ from django.contrib import admin
 from django.urls import (
     base,
     path,
+    re_path,
     include,
 )
 
@@ -71,8 +72,11 @@ urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('api/v1/auth/', include('djoser.urls')),
+    # re_path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+
 
     # change of personal data
     # path('api/update_user/', UserRetrieveUpdateAPIView.as_view()),
