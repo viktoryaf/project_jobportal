@@ -2,16 +2,12 @@ from django.db import models
 from django.conf import settings
 
 from django.utils import timezone
-from datetime import datetime
-from datetime import timedelta
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
-
-import jwt
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,11 +42,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True
     )
-    # number = models.CharField(
-    #     'Номер телефона',
-    #     max_length=11,
-    #     unique=True,
-    # )
     is_active = models.BooleanField(
         'Активность',
         default=True,

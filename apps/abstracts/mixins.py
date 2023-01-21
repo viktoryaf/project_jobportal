@@ -7,8 +7,6 @@ from django.db.models import QuerySet
 
 from abstracts.validators import APIValidator
 
-from vacancies.models import VacancyModel
-
 
 class ResponseMixin:
     """ResponseMixin."""

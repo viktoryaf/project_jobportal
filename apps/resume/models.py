@@ -1,10 +1,7 @@
 from django.db import models
 from django.db.models.query import QuerySet
 
-from typing import (
-    Optional,
-    Any
-)
+from typing import Any
 
 from datetime import datetime
 
@@ -44,11 +41,6 @@ class ResumeQuerySet(QuerySet):
         self.save(
             update_field=['datetime_deleted']
         )
-        # super().delete()
-
-
-# class Images(models.Model):
-#     image = models.ImageField("Примеры работ (портфолио)", max_length=10)
 
 
 class Resume(models.Model):
@@ -90,8 +82,6 @@ class Resume(models.Model):
         choices=WorkExperience.choices,
         default=WorkExperience.HAVE
     )
-
-    # image = models.ForeignKey(Images, on_delete=models.CASCADE)
     image = models.ImageField("Примеры работ (портфолио)", max_length=10, blank=True)
 
     objects = ResumeQuerySet().as_manager()

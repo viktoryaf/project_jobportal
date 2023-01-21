@@ -1,16 +1,9 @@
 from django.db import models
-
-# from abstracts.models import AbstractsDateTime
-
-from typing import (
-    Optional,
-    Any
-)
-from datetime import datetime
-
 from django.db.models.query import QuerySet
-
 from django.db.models import F
+
+from typing import Any
+from datetime import datetime
 
 
 class VacancyQuerySet(QuerySet):
@@ -48,7 +41,6 @@ class VacancyQuerySet(QuerySet):
         self.save(
             update_field=['datetime_deleted']
         )
-        # super().delete()
 
 
 class VacancyModel(models.Model):

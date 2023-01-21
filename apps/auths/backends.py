@@ -23,13 +23,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         if len(auth_header) == 1:
-            # Invalid token header. No credentials provided. Do not attempt to
-            # authenticate.
             return None
 
         elif len(auth_header) > 2:
-            # Invalid token header. The Token string should not contain spaces.
-            # Do not attempt to authenticate.
             return None
         prefix = auth_header[0].decode('utf-8')
         token = auth_header[1].decode('utf-8')

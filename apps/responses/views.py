@@ -26,8 +26,8 @@ class ResponsesAPIView(
         queryset: QuerySet[ResponsesModel] = \
             ResponsesModel.objects.all()
         serializer: VacanciesSerializer = VacanciesSerializer(
-            instance=queryset, # Передаём набор записей
-            many=True # Указываем, что на вход подаётся именно набор записей
+            instance=queryset, 
+            many=True 
         )
         return self.get_json_response(serializer.data)
 

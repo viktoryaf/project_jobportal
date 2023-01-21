@@ -4,10 +4,7 @@ from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
-from django.forms import model_to_dict
 from django.db.models import QuerySet
-
-#from rest_framework import generics
 
 from resume.models import Resume
 from resume.serializers import (
@@ -40,8 +37,8 @@ class ResumeListAPIView(
         queryset: QuerySet[Resume] = \
             Resume.objects.all()
         serializer: ResumeSerializer = ResumeSerializer(
-            instance=queryset, # Передаём набор записей
-            many=True # Указываем, что на вход подаётся именно набор записей
+            instance=queryset, 
+            many=True 
         )
         return self.get_json_response(serializer.data)
 
@@ -57,8 +54,8 @@ class ResumeAPIView(
             Resume.objects.filter(id=id)
 
         serializer: ResumeSerializer = ResumeSerializer(
-                instance=queryset, # Передаём набор записей
-                many=True # Указываем, что на вход подаётся именно набор записей
+                instance=queryset, 
+                many=True 
             )
         return self.get_json_response(serializer.data)
 
@@ -91,7 +88,6 @@ class ResumeAPIView(
                 obj, 
                 data=request.data
             )
-        # request.data['obj_id'] = obj.id
 
         if not serializer.is_valid():
             return self.get_json_response(
@@ -130,7 +126,6 @@ class ResumeAPIView(
                 'message': 'Объект был удален',
                 'payload': {
                     'obj_id': f'{obj.id}',
-                    # 'obj_deleted': f'{obj.datetime_deleted}',
                 }
             }
         )

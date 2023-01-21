@@ -31,12 +31,12 @@ from django.urls import (
 from django.conf import settings
 from django.conf.urls.static import static
 
-# from apps.auths.views import (
-#     RegistrationAPIView,
-#     LoginAPIView,
-#     UserRetrieveUpdateAPIView,
-#     ChangePasswordView,
-# )
+from apps.auths.views import (
+    RegistrationAPIView,
+    LoginAPIView,
+    UserRetrieveUpdateAPIView,
+    ChangePasswordView,
+)
 
 from apps.resume.views import (
     ResumeListAPIView,
@@ -66,16 +66,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # registration
-    # path('api/registration/', RegistrationAPIView.as_view()),
-    # path('api/login/', LoginAPIView.as_view()),
-    # path('api/changepass/', ChangePasswordView.as_view()),
+    path('api/registration/', RegistrationAPIView.as_view()),
+    path('api/login/', LoginAPIView.as_view()),
+    path('api/changepass/', ChangePasswordView.as_view()),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/v1/auth/', include('djoser.urls')),
-    # re_path('auth/', include('djoser.urls.authtoken')),
+                                                        
+    path('api-auth', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
+                               
 
 
     # change of personal data

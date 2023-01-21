@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Resume
 
+
 class ResumeListSerializer(serializers.Serializer):
 
     name = serializers.CharField(required=False)
@@ -19,6 +20,7 @@ class ResumeListSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return Resume.objects.create(**validated_data)
+
 
 class ResumeSerializer(serializers.Serializer):
     name = serializers.CharField(required=False)

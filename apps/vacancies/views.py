@@ -1,11 +1,8 @@
 from django.db.models import QuerySet
-# from django.forms import model_to_dict
 
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-# from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
@@ -44,8 +41,8 @@ class VacanciesView(
         queryset: QuerySet[VacancyModel] = \
             VacancyModel.objects.all()
         serializer: VacancySerializer = VacanciesSerializer(
-            instance=queryset, # Передаём набор записей
-            many=True # Указываем, что на вход подаётся именно набор записей
+            instance=queryset, 
+            many=True 
         )
         return self.get_json_response(
             {
@@ -63,7 +60,7 @@ class VacancyView(
     """VacancyView. """
     serializer_class = VacancySerializer
     model = VacancyModel
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = VacancyModel.objects.all()
     # authentication_classes = (TokenAuthentication, )
 
@@ -72,8 +69,8 @@ class VacancyView(
             VacancyModel.objects.filter(id=id)
 
         serializer: VacancySerializer = VacancySerializer(
-                instance=queryset, # Передаём набор записей
-                many=True # Указываем, что на вход подаётся именно набор записей
+                instance=queryset, 
+                many=True 
             )
         return self.get_json_response(
             {
